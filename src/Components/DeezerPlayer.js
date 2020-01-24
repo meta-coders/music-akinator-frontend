@@ -1,6 +1,7 @@
 import React from 'react';
 import {Card, Button} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core";
+import deezerIframe from "../utils/deezerIframe";
 
 const useStyles = makeStyles({
   deezerPlayerContainer: {
@@ -20,12 +21,12 @@ const useStyles = makeStyles({
   }
 });
 
-const DeezerPlayer = ({iframe}) => {
+const DeezerPlayer = ({iframe, deezerId}) => {
   const classes = useStyles();
 
   const iframeItem = () => {
     return {
-      __html: iframe
+      __html: iframe(deezerId)
     }
   };
 
@@ -49,7 +50,7 @@ const DeezerPlayer = ({iframe}) => {
 };
 
 DeezerPlayer.defaultProps = {
-  iframe: '<iframe scrolling="no" frameborder="0" allowTransparency="true" src="https://www.deezer.com/plugins/player?format=square&autoplay=false&playlist=true&width=300&height=300&color=ff0000&layout=dark&size=medium&type=tracks&id=85963521&app_id=1" width="300" height="300"></iframe>'
+  iframe: deezerIframe
 };
 
 export default DeezerPlayer;
