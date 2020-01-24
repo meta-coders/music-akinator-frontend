@@ -21,7 +21,7 @@ const useStyles = makeStyles({
   }
 });
 
-const DeezerPlayer = ({iframe, deezerId}) => {
+const DeezerPlayer = ({iframe, deezerId, onWin, onMismatch}) => {
   const classes = useStyles();
 
   const iframeItem = () => {
@@ -38,10 +38,10 @@ const DeezerPlayer = ({iframe, deezerId}) => {
         dangerouslySetInnerHTML={iframeItem()}>
       </div>
       <div className={classes.buttonBlock}>
-        <Button variant="contained" color="secondary">
+        <Button variant="contained" color="secondary" onClick={onWin}>
           ВГАДАВ
         </Button>
-        <Button variant="contained" color="error">
+        <Button variant="contained" color="error" onClick={onMismatch}>
           ОПЯТЬ МЫМО
         </Button>
       </div>
@@ -50,7 +50,7 @@ const DeezerPlayer = ({iframe, deezerId}) => {
 };
 
 DeezerPlayer.defaultProps = {
-  iframe: deezerIframe
+  iframe: deezerIframe,
 };
 
 export default DeezerPlayer;

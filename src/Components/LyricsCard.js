@@ -35,7 +35,7 @@ const LyricsCard = ({onSubmit}) => {
 };
 
 LyricsCard.propTypes = {
-  onSubmit: PropTypes.string
+  onSubmit: PropTypes.func
 };
 
 export default LyricsCard;
