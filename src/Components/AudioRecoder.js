@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { Button, Card, makeStyles, TextField } from "@material-ui/core";
+import { Button, Card, makeStyles } from "@material-ui/core";
+import { PlayArrow, Stop } from "@material-ui/icons";
+import { ReactMic } from "react-mic";
 
 const useStyles = makeStyles({
   lyricsContainer: {
@@ -10,43 +12,70 @@ const useStyles = makeStyles({
     flexDirection: "column",
     alignItems: "stretch"
   },
+  controls: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-around"
+  },
+  audio: {
+    width: "100%"
+  },
   submitButton: {
-    marginTop: "2em"
+    marginTop: "1em"
   }
 });
 
-const FileInput = ({ onChange, ...props }) => {
-  const inputProps = {
-    accept: "audio/*"
-  };
-  return (
-    <TextField
-      {...props}
-      onChange={onChange}
-      type="file"
-      inputProps={inputProps}
-    />
-  );
-};
-
 const AudioRecoder = ({ onSubmit }) => {
   const [humming, setHumming] = useState(null);
+  const [isRecording, setRecording] = useState(false);
   const classes = useStyles();
 
-  const handleChange = event => {
-    const file = event.target.files[0];
-    setHumming(file);
+  const handleStartRecoding = () => {
+    setRecording(true);
+  };
+
+  const handleStopRecording = () => {
+    setRecording(false);
+  };
+
+  const handleStop = blob => {
+    setHumming(blob);
   };
 
   const handleSubmit = () => {
     if (!!humming) {
-      onSubmit(humming);
+      onSubmit(humming.blob);
     }
   };
 
   return (
     <Card className={classes.lyricsContainer}>
-      <FileInput onChange={handleChange} />
+      <audio
+        className={classes.audio}
+        controls
+        src={humming ? humming.blobURL : humming}
+      />
+      <ReactMic
+        strokeColor="#19857b"
+        onStop={handleStop}
+        record={isRecording}
+      />
+      <div className={classes.controls}>
+        <Button
+          disabled={isRecording}
+          onClick={handleStartRecoding}
+          startIcon={<PlayArrow />}
+        >
+          Start
+        </Button>
+        <Button
+          disabled={!isRecording}
+          onClick={handleStopRecording}
+          startIcon={<Stop />}
+        >
+          Stop
+        </Button>
+      </div>
       <Button
         className={classes.submitButton}
         variant="contained"
