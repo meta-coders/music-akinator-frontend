@@ -13,7 +13,7 @@ import SpinnerCard from "./Components/SpinnerCard";
 
 const searchOptions = [
   { value: "lyrics", label: "Lyrics" },
-  { value: "humming", label: "Humming" }
+  { value: "recognizer", label: "Song Recognize" }
 ];
 
 const useStyles = makeStyles({
@@ -47,10 +47,10 @@ function App() {
     }
   };
 
-  const handleHummingSend = async humming => {
+  const handleSongRecognizeSend = async sample => {
     setPending(true);
     const formData = new FormData();
-    formData.append("file", humming);
+    formData.append("file", sample);
 
     const response = await fetch(
       `${process.env.REACT_APP_BACKEND_URL}/recognizeByHumming`,
@@ -102,11 +102,11 @@ function App() {
         <LyricsCard onSubmit={handleLyricsSend} />
       </TabPanel>
       <TabPanel
-        value="humming"
+        value="recognizer"
         className={classes.tabPanel}
         currentValue={searchMethod}
       >
-        <AudioRecoder onSubmit={handleHummingSend} />
+        <AudioRecoder onSubmit={handleSongRecognizeSend} />
       </TabPanel>
       <SpinnerCard loading={pending} />
       {deezerId && !pending && step !== "win" && step !== "lost" && (
