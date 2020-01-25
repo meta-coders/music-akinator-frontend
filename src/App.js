@@ -8,6 +8,7 @@ import DeezerPlayer from "./Components/DeezerPlayer";
 import LyricsCard from "./Components/LyricsCard";
 import WinCard from "./Components/WinCard";
 import LostCard from "./Components/LostCard";
+import AudioRecoder from "./Components/AudioRecoder";
 
 const searchOptions = [
   { value: "lyrics", label: "Lyrics" },
@@ -38,6 +39,26 @@ function App() {
     ).catch(e => console.log(e));
     const { deezerId } = await response.json();
     if (deezerId) setDeezerId(deezerId);
+  };
+
+  const handleHummingSend = async humming => {
+    const formData = new FormData();
+    formData.append("file", humming);
+
+    const response = await fetch(
+      `${process.env.REACT_APP_BACKEND_URL}/recognizeByHumming`,
+      {
+        method: "POST",
+        body: formData
+      }
+    ).catch(e => console.error(e));
+
+    if (response.status === 200) {
+      const { deezerId } = await response.json();
+      if (deezerId) {
+        setDeezerId(deezerId);
+      }
+    }
   };
 
   const handleWin = () => {
@@ -72,8 +93,12 @@ function App() {
       >
         <LyricsCard onSubmit={handleLyricsSend} />
       </TabPanel>
-      <TabPanel value="humming" currentValue={searchMethod}>
-        Item Two
+      <TabPanel
+        value="humming"
+        className={classes.tabPanel}
+        currentValue={searchMethod}
+      >
+        <AudioRecoder onSubmit={handleHummingSend} />
       </TabPanel>
       {deezerId && step !== "win" && step !== "lost" && (
         <DeezerPlayer
