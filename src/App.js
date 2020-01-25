@@ -9,6 +9,7 @@ import LyricsCard from "./Components/LyricsCard";
 import WinCard from "./Components/WinCard";
 import LostCard from "./Components/LostCard";
 import AudioRecoder from "./Components/AudioRecoder";
+import SpinnerCard from "./Components/SpinnerCard";
 
 const searchOptions = [
   { value: "lyrics", label: "Lyrics" },
@@ -29,8 +30,10 @@ function App() {
   const [searchMethod, setSearchMethod] = useState("lyrics");
   const [deezerId, setDeezerId] = useState(undefined);
   const [step, setStep] = useState(0);
+  const [pending, setPending] = useState(false);
 
   const handleLyricsSend = async value => {
+    setPending(true);
     const response = await fetch(
       `${
         process.env.REACT_APP_BACKEND_URL
@@ -38,10 +41,14 @@ function App() {
       { crossDomain: true }
     ).catch(e => console.log(e));
     const { deezerId } = await response.json();
-    if (deezerId) setDeezerId(deezerId);
+    if (deezerId) {
+      setPending(false);
+      setDeezerId(deezerId);
+    }
   };
 
   const handleHummingSend = async humming => {
+    setPending(true);
     const formData = new FormData();
     formData.append("file", humming);
 
@@ -56,6 +63,7 @@ function App() {
     if (response.status === 200) {
       const { deezerId } = await response.json();
       if (deezerId) {
+        setPending(false);
         setDeezerId(deezerId);
       }
     }
@@ -100,7 +108,8 @@ function App() {
       >
         <AudioRecoder onSubmit={handleHummingSend} />
       </TabPanel>
-      {deezerId && step !== "win" && step !== "lost" && (
+      <SpinnerCard loading={pending} />
+      {deezerId && !pending && step !== "win" && step !== "lost" && (
         <DeezerPlayer
           deezerId={deezerId}
           onWin={handleWin}
