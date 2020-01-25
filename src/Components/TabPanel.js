@@ -1,13 +1,9 @@
-import React from 'react';
-import {Typography, Box} from "@material-ui/core";
+import React from "react";
+import { Typography, Box } from "@material-ui/core";
 
-const TabPanel = ({children, value, currentValue, className}) => {
+const TabPanel = ({ children, value, currentValue, className }) => {
   return (
-    <Typography
-      component="div"
-      role="tabpanel"
-      hidden={value !== currentValue}
-    >
+    <Typography component="div" role="tabpanel" hidden={value !== currentValue}>
       {value === currentValue && <Box my={3}>{children}</Box>}
     </Typography>
   );
